@@ -1,14 +1,14 @@
 var net = require('net');
-var memcachespeak = require('./lib/memcachespeak');
+var pgemcee = require('./lib/pgemcee');
 
-var server = net.createServer(function(c) { 
+var server = net.createServer(function(conn) { 
 		console.log('connected');
 
 		command_buffer = new Buffer('');
-		command_line_group = [];
-		awaiting_data = false;
+		awaiting_payload = false;
+		initial_command = false;
 
-		c.on('data', function(data) {
+		conn.on('data', function(data) {
 
 			command_buffer += data;
 			buffer_split = command_buffer.toString().split('\r\n');
@@ -20,21 +20,23 @@ var server = net.createServer(function(c) {
 				for(i=0;i<buffer_split.length;i++){
 					command_line = buffer_split[i];
 					
-					command_line_group.push(command_line);
-
-					// if we aren't expecting any data next line and this command is a storage command, wait for data 
-					if( !awaiting_data && memcachespeak.is_storage_command( command_line ) ){
-
-						awaiting_data = true;
-
-					} else { 
-
-						memcachespeak.run( command_line_group, c );
-
+					if( awaiting_payload ){
+					console.log('awaiting payload' );
+						pgemcee.run( pre_command_line, command_line, conn );
+						// messed this all up, have to refactor shortly
 						// reset command_line_group 
-						command_line_group = [];
-						awaiting_data = false;
-
+						pre_command_line = false;
+						awaiting_payload = false;
+					} else if( pgemcee.requires_payload( command_line ) ){
+					console.log('checking requires payload' );
+						pre_command_line = command_line;
+						awaiting_payload = true;
+					} else { 
+					console.log('executing' );
+						pgemcee.run( command_line, false, conn );
+						// reset command_line_group 
+						pre_command_line = false;
+						awaiting_payload = false;
 					}
 
 				}
@@ -43,7 +45,7 @@ var server = net.createServer(function(c) {
 			
 		});
 
-		c.on('end', function() {
+		conn.on('end', function() {
 			console.log('disconnected');
 		});
 });
