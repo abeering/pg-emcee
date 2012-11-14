@@ -1,5 +1,5 @@
 var net = require('net');
-var memcachespeak = require('memcachespeak');
+var memcachespeak = require('./lib/memcachespeak');
 
 var server = net.createServer(function(c) { 
 		console.log('connected');
