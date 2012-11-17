@@ -6,7 +6,7 @@ var server = net.createServer(function(conn) {
 
 		command_buffer = new Buffer('');
 		awaiting_payload = false;
-		initial_command = false;
+		pre_command_line = false;
 
 		conn.on('data', function(data) {
 
@@ -19,24 +19,16 @@ var server = net.createServer(function(conn) {
 
 				for(i=0;i<buffer_split.length;i++){
 					command_line = buffer_split[i];
-					
-					if( awaiting_payload ){
-					console.log('awaiting payload' );
-						pgemcee.run( pre_command_line, command_line, conn );
-						// messed this all up, have to refactor shortly
-						// reset command_line_group 
-						pre_command_line = false;
-						awaiting_payload = false;
-					} else if( pgemcee.requires_payload( command_line ) ){
-					console.log('checking requires payload' );
+
+					if( pgemcee.requires_payload( command_line ) ){
 						pre_command_line = command_line;
 						awaiting_payload = true;
-					} else { 
-					console.log('executing' );
-						pgemcee.run( command_line, false, conn );
-						// reset command_line_group 
-						pre_command_line = false;
+					} else if( awaiting_payload ) {
+						pgemcee.run( pre_command_line, command_line, conn );
 						awaiting_payload = false;
+						pre_command_line = false;
+					} else { 
+						pgemcee.run( command_line, false, conn );
 					}
 
 				}
