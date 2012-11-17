@@ -2,7 +2,6 @@ var net = require('net');
 var pgemcee = require('./lib/pgemcee');
 
 var server = net.createServer(function(conn) { 
-		console.log('connected');
 
 		command_buffer = new Buffer('');
 		awaiting_payload = false;
@@ -38,12 +37,8 @@ var server = net.createServer(function(conn) {
 		});
 
 		conn.on('end', function() {
-			console.log('disconnected');
 		});
 });
 
 server.listen(1337, function() { 
-		console.log('bound');
 });
-
-console.log('Server running.');
