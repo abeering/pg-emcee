@@ -1,0 +1,9 @@
+{
+  "name": "pgemcee",
+  "version": "0.0.1",
+  "main": "./lib/pgemcee",
+  "dependencies": {
+    "net": "1.0.0",
+	"pg": "0.7.2"
+  }
+}
