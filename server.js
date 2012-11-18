@@ -1,6 +1,15 @@
 var net = require('net');
 var pgemcee = require('./lib/pgemcee');
 
+// set off reaper for expiring keys
+// set to 5 seconds - going to figure out how much of an effect this has during 
+// some benchmarking
+setInterval( 
+	function(){ 
+		pgemcee.do_expiry();
+	}, 5000 
+);
+
 var server = net.createServer(function(conn) { 
 
 		command_buffer = new Buffer('');
