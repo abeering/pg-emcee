@@ -1,5 +1,7 @@
+#!/usr/bin/env node
+
 var net = require('net');
-var pgemcee = require('./lib/pgemcee');
+var pgemcee = require('../');
 
 // set off reaper for expiring keys
 // set to 5 seconds - going to figure out how much of an effect this has during 
