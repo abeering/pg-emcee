@@ -14,21 +14,21 @@ setInterval(
 
 var server = net.createServer(function(conn) { 
 
-		payload_buffer = Buffer('');
-		payload_size = 0;
-		storage_command = '';
-		awaiting_payload = false;
+		var payload_buffer = Buffer('');
+		var payload_size = 0;
+		var storage_command = '';
+		var awaiting_payload = false;
 
 		conn.on('data', function(data) {
 
-			buffer_split = data.toString().split('\r\n');
+			var buffer_split = data.toString().split('\r\n');
 			if( buffer_split[buffer_split.length - 1] == '' ){
 				buffer_split.splice(-1,1);
 			}
 
 			for(i=0;i<buffer_split.length;i++){
 
-				buffer_command = buffer_split[i];
+				var buffer_command = buffer_split[i];
 
 				if( awaiting_payload ) {
 
