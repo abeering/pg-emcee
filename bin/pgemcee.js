@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var net = require('net');
-var pgemcee = require('../');
+var pgemcee = require('../lib/pgemcee');
 
 // set off reaper for expiring keys
 // set to 5 seconds - going to figure out how much of an effect this has during 
@@ -64,5 +64,6 @@ var server = net.createServer(function(conn) {
 		});
 });
 
-server.listen(1337, function() { 
+var port = ( pgemcee.config.pgemcee.port ) ? pgemcee.config.pgemcee.port : 1337;
+server.listen(port, function() { 
 });
