@@ -1,10 +1,10 @@
 DROP TABLE IF EXISTS store;
-DROP FUNCTION IF EXISTS store_upsert(akey VARCHAR(1024), avalue TEXT, aflags INT, aexptime INT, abytes INT);
+DROP FUNCTION IF EXISTS store_upsert(akey VARCHAR(1024), avalue TEXT, aflags INT, aexptime TIMESTAMP WITH TIME ZONE, abytes INT);
 
-CREATE TABLE store ( key VARCHAR(1024) PRIMARY KEY, value TEXT, flags INT, exptime INT, bytes INT );
+CREATE TABLE store ( key VARCHAR(1024) PRIMARY KEY, value TEXT, flags INT, exptime TIMESTAMP WITH TIME ZONE, bytes INT );
 
 -- upsert taken from http://www.postgresql.org/docs/current/static/plpgsql-control-structures.html#PLPGSQL-UPSERT-EXAMPLE
-CREATE FUNCTION store_upsert(akey VARCHAR(1024), avalue TEXT, aflags INT, aexptime INT, abytes INT) RETURNS VOID AS
+CREATE FUNCTION store_upsert(akey VARCHAR(1024), avalue TEXT, aflags INT, aexptime TIMESTAMP WITH TIME ZONE, abytes INT) RETURNS VOID AS
 $$
 BEGIN
     LOOP
